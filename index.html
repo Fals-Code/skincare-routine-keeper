@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f6f0e7" />
+  <title>My Skincare Shelf</title>
+  <link rel="stylesheet" href="./src/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">daily ritual</p>
+      <h1>My skincare shelf</h1>
+      <p class="subtitle">A calm little place for what your skin is using now.</p>
+    </div>
+    <div class="summary" aria-label="Shelf summary">
+      <div><strong id="total-count">0</strong><span>products</span></div>
+      <div><strong id="active-count">0</strong><span>active</span></div>
+      <div><strong id="paused-count">0</strong><span>paused</span></div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="panel add-panel">
+      <div class="panel-heading">
+        <p class="eyebrow">add to shelf</p>
+        <h2>New product</h2>
+        <p>Keep only what belongs in your current routine.</p>
+      </div>
+
+      <form id="product-form">
+        <label>
+          Product name
+          <input id="name" name="name" maxlength="60" autocomplete="off" placeholder="e.g. Barrier Repair Cream" required />
+        </label>
+
+        <label>
+          Brand
+          <input id="brand" name="brand" maxlength="50" autocomplete="organization" placeholder="e.g. Skin & Co." required />
+        </label>
+
+        <label>
+          Skin concern
+          <input id="concern" name="concern" maxlength="40" autocomplete="off" placeholder="Hydration, acne, SPF..." required />
+        </label>
+
+        <label>
+          Routine slot
+          <select id="slot" name="slot" required>
+            <option value="Morning">Morning</option>
+            <option value="Evening">Evening</option>
+            <option value="Both">Both</option>
+          </select>
+        </label>
+
+        <fieldset>
+          <legend>Current status</legend>
+          <div class="segmented">
+            <label><input type="radio" name="active" value="true" checked /><span>Active</span></label>
+            <label><input type="radio" name="active" value="false" /><span>Paused</span></label>
+          </div>
+          <small>Pause products you ran out of or are replacing.</small>
+        </fieldset>
+
+        <button class="primary" type="submit">Add product <span aria-hidden="true">→</span></button>
+      </form>
+    </aside>
+
+    <section class="shelf-area" aria-labelledby="shelf-title">
+      <div class="shelf-intro">
+        <div>
+          <p class="eyebrow">your routine</p>
+          <h2 id="shelf-title">Today’s shelf</h2>
+        </div>
+        <p>Products marked “Both” appear in each routine, but stay one product behind the scenes.</p>
+      </div>
+
+      <section class="routine morning" aria-labelledby="morning-title">
+        <div class="routine-title">
+          <div class="orb sun" aria-hidden="true"></div>
+          <div><p>AM ritual</p><h3 id="morning-title">Morning shelf</h3></div>
+          <span id="morning-count" class="count-pill">0</span>
+        </div>
+        <div id="morning-list" class="product-grid"></div>
+        <div class="shelf-line" aria-hidden="true"></div>
+      </section>
+
+      <section class="routine evening" aria-labelledby="evening-title">
+        <div class="routine-title">
+          <div class="orb moon" aria-hidden="true"></div>
+          <div><p>PM ritual</p><h3 id="evening-title">Evening shelf</h3></div>
+          <span id="evening-count" class="count-pill">0</span>
+        </div>
+        <div id="evening-list" class="product-grid"></div>
+        <div class="shelf-line" aria-hidden="true"></div>
+      </section>
+    </section>
+  </main>
+
+  <div id="status" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

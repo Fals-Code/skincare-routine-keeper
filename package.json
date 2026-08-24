@@ -1,0 +1,10 @@
+{
+  "name": "skincare-routine-keeper",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "node --check src/core.js && node --check src/main.js",
+    "test": "node --test",
+    "check": "npm run lint && npm test"
+  }
+}
