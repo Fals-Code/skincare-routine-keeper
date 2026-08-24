@@ -1,9 +1,10 @@
-import { loadProducts, makeProduct, productsForSlot, saveProducts } from './core.js';
+import { getStorage, loadProducts, makeProduct, productsForSlot, saveProducts } from './core.js';
 
 const $ = (selector) => document.querySelector(selector);
 const form = $('#product-form');
 const status = $('#status');
-let products = loadProducts(localStorage);
+const storage = getStorage();
+let products = loadProducts(storage);
 let toastTimer;
 
 function escapeHtml(value) {
@@ -20,11 +21,12 @@ function announce(message, kind = 'ok') {
   toastTimer = setTimeout(() => status.classList.remove('show'), 2400);
 }
 
-function persist(next, successMessage) {
+function persist(next, successMessage, afterRender) {
   try {
-    saveProducts(localStorage, next);
+    saveProducts(storage, next);
     products = next;
     render();
+    afterRender?.();
     announce(successMessage);
     return true;
   } catch {
@@ -41,11 +43,11 @@ function emptyState(slot) {
   </div>`;
 }
 
-function productCard(product) {
+function productCard(product, routine) {
   const paused = product.active ? '' : ' paused';
   const statusText = product.active ? 'Active' : 'Paused';
   const actionText = product.active ? 'Pause' : 'Resume';
-  return `<article class="product-card${paused}">
+  return `<article class="product-card${paused}" data-routine="${routine}">
     <div class="product-top">
       <div class="bottle" aria-hidden="true"><span></span></div>
       <div class="product-meta">
@@ -69,7 +71,14 @@ function renderRoutine(slot) {
   const items = productsForSlot(products, slot);
   const key = slot.toLowerCase();
   $(`#${key}-count`).textContent = items.length;
-  $(`#${key}-list`).innerHTML = items.length ? items.map(productCard).join('') : emptyState(slot);
+  $(`#${key}-list`).innerHTML = items.length ? items.map((product) => productCard(product, slot)).join('') : emptyState(slot);
+}
+
+function restoreActionFocus(id, action, routine) {
+  const control = [...document.querySelectorAll('button[data-action]')].find((item) =>
+    item.dataset.id === id && item.dataset.action === action && item.closest('[data-routine]')?.dataset.routine === routine
+  );
+  control?.focus();
 }
 
 function render() {
@@ -120,7 +129,8 @@ document.querySelector('.shelf-area').addEventListener('click', (event) => {
 
   if (action === 'toggle') {
     const next = products.map((item) => item.id === id ? { ...item, active: !item.active } : item);
-    persist(next, `${product.name} ${product.active ? 'paused' : 'resumed'}.`);
+    const routine = button.closest('[data-routine]')?.dataset.routine;
+    persist(next, `${product.name} ${product.active ? 'paused' : 'resumed'}.`, () => restoreActionFocus(id, action, routine));
   } else if (action === 'delete') {
     persist(products.filter((item) => item.id !== id), `${product.name} removed from your shelf.`);
   }

@@ -1,6 +1,14 @@
 export const STORAGE_KEY = 'skincare-routine-keeper:v1';
 const SLOTS = new Set(['Morning', 'Evening', 'Both']);
 
+export function getStorage(environment = globalThis) {
+  try {
+    return environment.localStorage;
+  } catch {
+    return null;
+  }
+}
+
 export function isProduct(value) {
   return Boolean(value && typeof value === 'object' &&
     typeof value.id === 'string' && value.id &&

@@ -124,7 +124,7 @@ fieldset small { display: block; margin-top: 7px; color: var(--muted); line-heig
   background: rgba(255,255,255,.9); transition: transform .18s ease, opacity .18s ease, box-shadow .18s ease;
 }
 .product-card:hover { transform: translateY(-2px); box-shadow: 0 12px 22px rgba(75,65,50,.08); }
-.product-card.paused { opacity: .62; background: #f6f3ee; }
+.product-card.paused { background: #f6f3ee; border-color: #d8cec3; }
 .product-top { display: flex; align-items: center; gap: 12px; min-width: 0; }
 .bottle {
   width: 44px; height: 58px; flex: 0 0 auto; position: relative; border: 1px solid #cfd8d2;
@@ -140,6 +140,7 @@ fieldset small { display: block; margin-top: 7px; color: var(--muted); line-heig
 .product-meta p { margin: 0; overflow: hidden; color: var(--muted); font-size: .78rem; text-overflow: ellipsis; white-space: nowrap; }
 .product-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 14px 0; }
 .product-tags span { padding: 5px 8px; border-radius: 999px; background: #f3eee8; color: #655f58; font-size: .7rem; }
+.paused .product-tags span { background: #ece5dc; color: #71665d; }
 .product-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .product-actions button {
   min-height: 42px; padding: 0 9px; border: 1px solid var(--line); border-radius: 10px;

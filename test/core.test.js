@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { STORAGE_KEY, loadProducts, makeProduct, normalizeProducts, productsForSlot, saveProducts } from '../src/core.js';
+import { STORAGE_KEY, getStorage, loadProducts, makeProduct, normalizeProducts, productsForSlot, saveProducts } from '../src/core.js';
 
 class MemoryStorage {
   #data = new Map();
@@ -35,6 +35,14 @@ test('malformed storage fails closed to an empty shelf', () => {
   const storage = new MemoryStorage();
   storage.setItem(STORAGE_KEY, '{bad json');
   assert.deepEqual(loadProducts(storage), []);
+});
+
+test('restricted localStorage access falls back safely', () => {
+  const restrictedEnvironment = Object.defineProperty({}, 'localStorage', {
+    get() { throw new Error('Storage is disabled'); }
+  });
+  assert.equal(getStorage(restrictedEnvironment), null);
+  assert.deepEqual(loadProducts(getStorage(restrictedEnvironment)), []);
 });
 
 test('normalization rejects invalid and duplicate records', () => {
