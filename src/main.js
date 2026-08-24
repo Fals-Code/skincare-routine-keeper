@@ -1,4 +1,4 @@
-import { getStorage, loadProducts, makeProduct, productsForSlot, saveProducts } from './core.js';
+import { focusTargetForDelete, getStorage, loadProducts, makeProduct, productsForSlot, saveProducts } from './core.js';
 
 const $ = (selector) => document.querySelector(selector);
 const form = $('#product-form');
@@ -81,6 +81,12 @@ function restoreActionFocus(id, action, routine) {
   control?.focus();
 }
 
+function restoreDeleteFocus(nextProducts, routine) {
+  const nextId = focusTargetForDelete(nextProducts, routine);
+  if (nextId) restoreActionFocus(nextId, 'toggle', routine);
+  else $('#name').focus();
+}
+
 function render() {
   $('#total-count').textContent = products.length;
   $('#active-count').textContent = products.filter((p) => p.active).length;
@@ -132,7 +138,9 @@ document.querySelector('.shelf-area').addEventListener('click', (event) => {
     const routine = button.closest('[data-routine]')?.dataset.routine;
     persist(next, `${product.name} ${product.active ? 'paused' : 'resumed'}.`, () => restoreActionFocus(id, action, routine));
   } else if (action === 'delete') {
-    persist(products.filter((item) => item.id !== id), `${product.name} removed from your shelf.`);
+    const routine = button.closest('[data-routine]')?.dataset.routine;
+    const next = products.filter((item) => item.id !== id);
+    persist(next, `${product.name} removed from your shelf.`, () => restoreDeleteFocus(next, routine));
   }
 });
 

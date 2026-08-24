@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { STORAGE_KEY, getStorage, loadProducts, makeProduct, normalizeProducts, productsForSlot, saveProducts } from '../src/core.js';
+import { STORAGE_KEY, focusTargetForDelete, getStorage, loadProducts, makeProduct, normalizeProducts, productsForSlot, saveProducts } from '../src/core.js';
 
 class MemoryStorage {
   #data = new Map();
@@ -35,6 +35,13 @@ test('malformed storage fails closed to an empty shelf', () => {
   const storage = new MemoryStorage();
   storage.setItem(STORAGE_KEY, '{bad json');
   assert.deepEqual(loadProducts(storage), []);
+});
+
+test('delete focus target stays in the same routine when possible', () => {
+  const remaining = [product({ id: 'evening', slot: 'Evening' }), product({ id: 'both', slot: 'Both' })];
+  assert.equal(focusTargetForDelete(remaining, 'Morning'), 'both');
+  assert.equal(focusTargetForDelete(remaining, 'Evening'), 'evening');
+  assert.equal(focusTargetForDelete([product({ id: 'morning' })], 'Evening'), null);
 });
 
 test('restricted localStorage access falls back safely', () => {

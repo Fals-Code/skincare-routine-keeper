@@ -52,6 +52,10 @@ export function productsForSlot(products, slot) {
   return products.filter((product) => product.slot === slot || product.slot === 'Both');
 }
 
+export function focusTargetForDelete(products, slot) {
+  return productsForSlot(products, slot)[0]?.id ?? null;
+}
+
 export function makeProduct(data, id = globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`) {
   const product = {
     id,
